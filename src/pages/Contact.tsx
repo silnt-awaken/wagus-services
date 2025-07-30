@@ -14,7 +14,8 @@ export default function Contact() {
     budget: "",
     timeline: "",
     message: "",
-    hearAbout: ""
+    hearAbout: "",
+    premiumAddons: []
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,6 +23,15 @@ export default function Contact() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddonChange = (addonValue: string) => {
+    setFormData(prev => ({
+      ...prev,
+      premiumAddons: prev.premiumAddons.includes(addonValue)
+        ? prev.premiumAddons.filter(addon => addon !== addonValue)
+        : [...prev.premiumAddons, addonValue]
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,6 +56,7 @@ export default function Contact() {
         timeline: formData.timeline,
         message: formData.message,
         hear_about: formData.hearAbout,
+        premium_addons: formData.premiumAddons.join(', '),
         to_email: 'silnt.awaken@gmail.com' // Your email address
       };
       
@@ -67,7 +78,8 @@ export default function Contact() {
         budget: "",
         timeline: "",
         message: "",
-        hearAbout: ""
+        hearAbout: "",
+        premiumAddons: []
       });
     } catch (error) {
       console.error('EmailJS Error:', error);
@@ -410,6 +422,106 @@ export default function Contact() {
                   <option value="online-ad">Online Advertisement</option>
                   <option value="other">Other</option>
                 </select>
+              </div>
+
+              {/* Premium Add-ons Section */}
+              <div className="border-t pt-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    Premium Add-On Services
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Interested in any of these premium features? Select all that apply for inclusion in your audit.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.premiumAddons.includes('busy-meter')}
+                        onChange={() => handleAddonChange('busy-meter')}
+                        className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <div>
+                        <div className="font-semibold text-gray-900">🔥 Busy Meter</div>
+                        <div className="text-sm text-gray-600 mb-1">Real-time occupancy tracking like Planet Fitness</div>
+                        <div className="text-xs font-medium text-blue-600">$99/month</div>
+                      </div>
+                    </label>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.premiumAddons.includes('queue-system')}
+                        onChange={() => handleAddonChange('queue-system')}
+                        className="mt-1 w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                      />
+                      <div>
+                        <div className="font-semibold text-gray-900">⏰ Queue Management</div>
+                        <div className="text-sm text-gray-600 mb-1">Virtual queue with wait time estimates</div>
+                        <div className="text-xs font-medium text-orange-600">$149/month</div>
+                      </div>
+                    </label>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.premiumAddons.includes('enhanced-search')}
+                        onChange={() => handleAddonChange('enhanced-search')}
+                        className="mt-1 w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      />
+                      <div>
+                        <div className="font-semibold text-gray-900">🔍 Enhanced Search</div>
+                        <div className="text-sm text-gray-600 mb-1">AI-powered search with advanced filtering</div>
+                        <div className="text-xs font-medium text-green-600">$199/month</div>
+                      </div>
+                    </label>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.premiumAddons.includes('live-chat')}
+                        onChange={() => handleAddonChange('live-chat')}
+                        className="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                      />
+                      <div>
+                        <div className="font-semibold text-gray-900">💬 Live Chat 24/7</div>
+                        <div className="text-sm text-gray-600 mb-1">Round-the-clock responsive support</div>
+                        <div className="text-xs font-medium text-purple-600">$299/month</div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                
+                {formData.premiumAddons.length > 0 && (
+                  <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-orange-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <span className="font-semibold text-gray-900">Selected Add-ons:</span>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {formData.premiumAddons.map(addon => {
+                        const addonNames = {
+                          'busy-meter': 'Busy Meter ($99/month)',
+                          'queue-system': 'Queue Management ($149/month)',
+                          'enhanced-search': 'Enhanced Search ($199/month)',
+                          'live-chat': 'Live Chat 24/7 ($299/month)'
+                        };
+                        return addonNames[addon as keyof typeof addonNames];
+                      }).join(', ')}
+                    </div>
+                    <div className="mt-2 text-xs text-blue-600 font-medium">
+                      💡 Bundle all 4 add-ons for $599/month (33% savings)
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="pt-4">
